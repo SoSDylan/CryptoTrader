@@ -60,9 +60,14 @@ namespace CryptoTrader.Core
                                             numberOfTrades,
                                             takerBuyBaseAssetVolume,
                                             takerBuyQuoteAssetVolume);
+                    
+                    // When joining different requests, make sure the last candles are not duplicated
+                    if (candleList.LastOrDefault()?.OpenTime == candle.OpenTime)
+                        continue;
 
                     candleList.Add(candle);
                     
+                    // Don't add more than the requested amount of candles
                     if (candle.OpenTime < startTime)
                         break;
                 }
