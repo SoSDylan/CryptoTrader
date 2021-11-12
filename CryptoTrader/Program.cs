@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CryptoTrader.Core;
 using CryptoTrader.Hyperopt.Loss;
@@ -10,7 +11,10 @@ namespace CryptoTrader
     {
         public static async Task Main(string[] args)
         {
-            var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT", 5);
+            var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT",
+                                                                        5,
+                                                                        DateTime.Now.AddDays(-10),
+                                                                        DateTime.Now.AddDays(0));
             
             // var candlesList = new List<Candle>
             // {
@@ -21,7 +25,7 @@ namespace CryptoTrader
             // };
             // var candles = new Candles(candlesList, 5, 100);
             
-            var hyperopt = new Hyperopt.Hyperopt(new TestStrategy(), candles, new OnlyProfitHyperoptLoss(), 1000);
+            var hyperopt = new Hyperopt.Hyperopt(new TestStrategy(), candles, new OnlyProfitHyperoptLoss(), 100);
             
             hyperopt.Optimize();
         }
