@@ -23,7 +23,7 @@ namespace CryptoTrader.Hyperopt
         private Dictionary<string, dynamic> _bestOptimizableValues = new();
         private BacktestResults _bestBacktestResult;
 
-        public Hyperopt(TestStrategy strategy, Candles candles, IHyperoptLoss hyperoptLoss, int epochs,
+        public Hyperopt(TestStrategy strategy, IHyperoptLoss hyperoptLoss, Candles candles, int epochs,
             int? buyTimeout = null, int? sellTimeout = null)
         {
             _strategy = strategy;

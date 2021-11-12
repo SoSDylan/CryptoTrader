@@ -25,7 +25,7 @@ namespace CryptoTrader
             // };
             // var candles = new Candles(candlesList, 5, 100);
             
-            var hyperopt = new Hyperopt.Hyperopt(new TestStrategy(), candles, new OnlyProfitHyperoptLoss(), 100);
+            var hyperopt = new Hyperopt.Hyperopt(new TestStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
             
             hyperopt.Optimize();
         }
