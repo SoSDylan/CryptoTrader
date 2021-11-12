@@ -19,7 +19,7 @@ namespace CryptoTrader.Backtest
         {
             for (int i = 1; i <= _candles.List.Count; i++)
             {
-                var candles = new Candles(_candles.List.Take(i).ToList(), _candles.Timestep, _candles.MaxCandles);
+                var candles = new Candles(_candles.List.Take(i).ToList(), _candles.Interval, _candles.MaxCandles);
                 _strategy.Tick(candles);
             }
             

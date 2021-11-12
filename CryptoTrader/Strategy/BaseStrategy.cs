@@ -22,11 +22,14 @@ namespace CryptoTrader.Strategy
 
             if (HasPurchased && BoughtAt.HasValue && sell)
             {
+                // Sell
                 Profit += candles.GetCurrentCandle().Close - BoughtAt.Value;
+                BoughtAt = null;
                 HasPurchased = false;
             }
             else if (!HasPurchased && buy)
             {
+                // Buy
                 BoughtAt = candles.GetCurrentCandle().Close;
                 HasPurchased = true;
             }

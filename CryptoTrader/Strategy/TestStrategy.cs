@@ -12,18 +12,26 @@ namespace CryptoTrader.Strategy
         public override HyperoptContext HyperoptContext()
         {
             return new HyperoptContext()
-                .Optimize(nameof(_buyLessThan), () => _buyLessThan, val => _buyLessThan = val, 0, 10)
-                .Optimize(nameof(_sellGreaterThan), () => _sellGreaterThan, val => _sellGreaterThan = val, 0, 10);
+            // .Optimize(nameof(_buyLessThan), () => _buyLessThan, val => _buyLessThan = val, 0, 10)
+            // .Optimize(nameof(_sellGreaterThan), () => _sellGreaterThan, val => _sellGreaterThan = val, 0, 10);
+            .Optimize(nameof(_buyLessThan), () => _buyLessThan, val => _buyLessThan = val, -100, 100)
+            .Optimize(nameof(_sellGreaterThan), () => _sellGreaterThan, val => _sellGreaterThan = val, -100, 100);
         }
 
         public override bool BuySignal(Candles candles)
         {
-            return candles.GetCurrentCandle().Close <= _buyLessThan;
+            var lastCandle = candles.GetOlderCandle(1);
+            if (lastCandle == null) return false;
+            
+            return candles.GetCurrentCandle().Close - lastCandle.Close <= _buyLessThan;
         }
 
         public override bool SellSignal(Candles candles)
         {
-            return candles.GetCurrentCandle().Close > _sellGreaterThan;
+            var lastCandle = candles.GetOlderCandle(1);
+            if (lastCandle == null) return false;
+            
+            return candles.GetCurrentCandle().Close - lastCandle.Close > _sellGreaterThan;
         }
     }
 }
