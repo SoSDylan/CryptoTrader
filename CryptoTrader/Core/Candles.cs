@@ -60,17 +60,42 @@ namespace CryptoTrader.Core
     
     public class Candle
     {
-        public long OpenTime { get; }
+        public DateTime OpenTime { get; }
         public double High { get; }
         public double Low { get; }
         public double Open { get; }
         public double Close { get; }
         public double Volume { get; }
-        public long CloseTime { get; }
+        public DateTime CloseTime { get; }
         public double QuoteAssetVolume { get; }
         public int NumberOfTrades { get; }
         public double TakerBuyBaseAssetVolume { get; }
         public double TakerBuyQuoteAssetVolume { get; }
+
+        public Candle(DateTime openTime,
+            double open,
+            double high,
+            double low,
+            double close,
+            double volume,
+            DateTime closeTime,
+            double quoteAssetVolume,
+            int numberOfTrades,
+            double takerBuyBaseAssetVolume,
+            double takerBuyQuoteAssetVolume)
+        {
+            OpenTime = openTime;
+            High = high;
+            Low = low;
+            Open = open;
+            Close = close;
+            Volume = volume;
+            CloseTime = closeTime;
+            QuoteAssetVolume = quoteAssetVolume;
+            NumberOfTrades = numberOfTrades;
+            TakerBuyBaseAssetVolume = takerBuyBaseAssetVolume;
+            TakerBuyQuoteAssetVolume = takerBuyQuoteAssetVolume;
+        }
 
         public Candle(long openTime,
             double open,
@@ -84,13 +109,13 @@ namespace CryptoTrader.Core
             double takerBuyBaseAssetVolume,
             double takerBuyQuoteAssetVolume)
         {
-            OpenTime = openTime;
+            OpenTime = DateTimeOffset.FromUnixTimeMilliseconds(openTime).DateTime;
             High = high;
             Low = low;
             Open = open;
             Close = close;
             Volume = volume;
-            CloseTime = closeTime;
+            CloseTime = DateTimeOffset.FromUnixTimeMilliseconds(closeTime).DateTime;
             QuoteAssetVolume = quoteAssetVolume;
             NumberOfTrades = numberOfTrades;
             TakerBuyBaseAssetVolume = takerBuyBaseAssetVolume;

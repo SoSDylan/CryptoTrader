@@ -18,14 +18,13 @@ namespace CryptoTrader.Core
                 < 1440 => $"{interval}h",
                 _ => $"{interval}d"
             };
-            
-            var uri = new Uri($"https://api.binance.com/api/v1/klines?symbol={symbol}&interval={intervalString}&startTime=1636539600000&endTime=1636689300000");
+
+            var uri = new Uri($"https://api.binance.com/api/v1/klines?symbol={symbol}&interval={intervalString}");
 
             using var client = new HttpClient();
             var response = await client.GetAsync(uri);
             
-            // <List<Candle>>
-            var json = await response.Content.ReadFromJsonAsync<List<dynamic>>();
+            var json = await response.Content.ReadFromJsonAsync<List<List<dynamic>>>();
 
             var candleList = new List<Candle>();
             foreach (var jsonCandle in json)

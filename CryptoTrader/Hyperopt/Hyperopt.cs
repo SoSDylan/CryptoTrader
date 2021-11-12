@@ -15,19 +15,24 @@ namespace CryptoTrader.Hyperopt
         private readonly IHyperoptLoss _hyperoptLoss;
         private readonly HyperoptContext _hyperoptContext;
         private readonly int _epochs;
+        private readonly int? _buyTimeout;
+        private readonly int? _sellTimeout;
 
         // The higher the number, the better the algorithm
         private double _bestLossResult = double.MinValue;
         private Dictionary<string, dynamic> _bestOptimizableValues = new();
         private BacktestResults _bestBacktestResult;
 
-        public Hyperopt(TestStrategy strategy, Candles candles, IHyperoptLoss hyperoptLoss, int epochs)
+        public Hyperopt(TestStrategy strategy, Candles candles, IHyperoptLoss hyperoptLoss, int epochs,
+            int? buyTimeout = null, int? sellTimeout = null)
         {
             _strategy = strategy;
             _candles = candles;
             _hyperoptLoss = hyperoptLoss;
             _epochs = epochs;
-            
+            _buyTimeout = buyTimeout;
+            _sellTimeout = sellTimeout;
+
             _hyperoptContext = _strategy.HyperoptContext();
         }
 
@@ -36,7 +41,8 @@ namespace CryptoTrader.Hyperopt
             for (var epoch = 0; epoch < _epochs; epoch++)
             {
                 // Run backtesting
-                var backtestResult = new Backtest.Backtest(_strategy, _candles).RunBacktest();
+                var backtestResult =
+                    new Backtest.Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
                 // Print test results
                 backtestResult.PrintResults();
                 

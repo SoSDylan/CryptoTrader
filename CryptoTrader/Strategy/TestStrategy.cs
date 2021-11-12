@@ -6,8 +6,8 @@ namespace CryptoTrader.Strategy
 {
     public class TestStrategy : BaseStrategy
     {
-        private int _buyLessThan = 0;
-        private int _sellGreaterThan = 0;
+        private double _buyLessThan = 0;
+        private double _sellGreaterThan = 0;
         
         public override HyperoptContext HyperoptContext()
         {
@@ -18,20 +18,26 @@ namespace CryptoTrader.Strategy
             .Optimize(nameof(_sellGreaterThan), () => _sellGreaterThan, val => _sellGreaterThan = val, -100, 100);
         }
 
-        public override bool BuySignal(Candles candles)
+        public override double? BuySignal(Candles candles)
         {
             var lastCandle = candles.GetOlderCandle(1);
-            if (lastCandle == null) return false;
+            if (lastCandle == null) return null;
+
+            if (candles.GetCurrentCandle().Close - lastCandle.Close <= _buyLessThan)
+                return candles.GetCurrentCandle().Close;
             
-            return candles.GetCurrentCandle().Close - lastCandle.Close <= _buyLessThan;
+            return null;
         }
 
-        public override bool SellSignal(Candles candles)
+        public override double? SellSignal(Candles candles)
         {
             var lastCandle = candles.GetOlderCandle(1);
-            if (lastCandle == null) return false;
-            
-            return candles.GetCurrentCandle().Close - lastCandle.Close > _sellGreaterThan;
+            if (lastCandle == null) return null;
+
+            if (candles.GetCurrentCandle().Close - lastCandle.Close > _sellGreaterThan)
+                return candles.GetCurrentCandle().Close;
+
+            return null;
         }
     }
 }
