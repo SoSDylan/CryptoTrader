@@ -10,6 +10,10 @@ namespace CryptoTrader.Core
         public readonly int MaxCandles;
         
         private List<Candle> _candles = new();
+        /// <summary>
+        /// Start of list is oldest candle
+        /// End of list is newest candle
+        /// </summary>
         public IList<Candle> List => _candles.AsReadOnly();
         
         public Candles(int interval, int maxCandles)
@@ -41,20 +45,23 @@ namespace CryptoTrader.Core
                 _candles.RemoveRange(0, _candles.Count - MaxCandles);
             }
         }
+        
+        public Candle? this[int offset]
+        {
+            get
+            {
+                if (_candles.Count <= offset)
+                {
+                    return null;
+                }
+            
+                return List[^(offset + 1)];
+            }
+        }
 
         public Candle GetCurrentCandle()
         {
             return List.Last();
-        }
-
-        public Candle? GetOlderCandle(int offset)
-        {
-            if (_candles.Count <= offset)
-            {
-                return null;
-            }
-            
-            return List[^(offset + 1)];
         }
     }
     

@@ -1,38 +1,43 @@
 using System;
 using CryptoTrader.Core;
 using CryptoTrader.Hyperopt;
+using CryptoTrader.Indicators;
 
 namespace CryptoTrader.Strategy
 {
     public class TestStrategy : BaseStrategy
     {
-        private double _buyLessThan = 0;
-        private double _sellGreaterThan = 0;
+        private double _buyMultiplier = 1;
+        private double _sellMultiplier = 1;
         
         public override HyperoptContext HyperoptContext()
         {
             return new HyperoptContext()
-                .Optimize(nameof(_buyLessThan), () => _buyLessThan, val => _buyLessThan = val, -100, 100)
-                .Optimize(nameof(_sellGreaterThan), () => _sellGreaterThan, val => _sellGreaterThan = val, -100, 100);
+                .Optimize(nameof(_buyMultiplier), () => _buyMultiplier, val => _buyMultiplier = val, 0.75, 1.25)
+                .Optimize(nameof(_sellMultiplier), () => _sellMultiplier, val => _sellMultiplier = val, 0.75, 1.25);
         }
 
         public override double? BuySignal(Candles candles)
         {
-            var lastCandle = candles.GetOlderCandle(1);
-            if (lastCandle == null) return null;
-
-            if (candles.GetCurrentCandle().Close - lastCandle.Close <= _buyLessThan)
-                return candles.GetCurrentCandle().Close;
+            var bb = new BollingerBands(candles, 10);
+            var vbb = bb[0];
             
+            if (!vbb.HasValue) return null;
+
+            if (candles.GetCurrentCandle().Close <= _buyMultiplier * vbb.Value.Lower)
+                return candles.GetCurrentCandle().Close;
+
             return null;
         }
 
         public override double? SellSignal(Candles candles)
         {
-            var lastCandle = candles.GetOlderCandle(1);
-            if (lastCandle == null) return null;
+            var bb = new BollingerBands(candles, 10);
+            var vbb = bb[0];
+            
+            if (!vbb.HasValue) return null;
 
-            if (candles.GetCurrentCandle().Close - lastCandle.Close > _sellGreaterThan)
+            if (candles.GetCurrentCandle().Close >= _sellMultiplier * vbb.Value.Main)
                 return candles.GetCurrentCandle().Close;
 
             return null;
