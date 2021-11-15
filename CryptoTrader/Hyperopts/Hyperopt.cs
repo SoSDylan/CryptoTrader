@@ -10,7 +10,7 @@ namespace CryptoTrader.Hyperopts
 {
     public class Hyperopt
     {
-        private readonly TestStrategy _strategy;
+        private readonly BaseStrategy _strategy;
         private readonly Candles _candles;
         private readonly IHyperoptLoss _hyperoptLoss;
         private readonly HyperoptContext _hyperoptContext;
@@ -23,7 +23,7 @@ namespace CryptoTrader.Hyperopts
         private Dictionary<string, dynamic> _bestOptimizableValues = new();
         private BacktestResults _bestBacktestResult;
 
-        public Hyperopt(TestStrategy strategy, IHyperoptLoss hyperoptLoss, Candles candles, int epochs,
+        public Hyperopt(BaseStrategy strategy, IHyperoptLoss hyperoptLoss, Candles candles, int epochs,
             int? buyTimeout = null, int? sellTimeout = null)
         {
             _strategy = strategy;

@@ -12,8 +12,8 @@ namespace CryptoTrader
         public static async Task Main(string[] args)
         {
             var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT",
-                                                                        5,
-                                                                        DateTime.Now.AddDays(-10),
+                                                                        1440,
+                                                                        DateTime.Now.AddDays(-720),
                                                                         DateTime.Now.AddDays(0));
             
             // var candlesList = new List<Candle>
@@ -25,7 +25,7 @@ namespace CryptoTrader
             // };
             // var candles = new Candles(candlesList, 5, 100);
             
-            var hyperopt = new Hyperopt(new TestStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
+            var hyperopt = new Hyperopt(new MoonPhaseStrategy(), new OnlyProfitHyperoptLoss(), candles, 1000);
             
             hyperopt.Optimize();
         }
