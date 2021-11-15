@@ -6,7 +6,7 @@ namespace CryptoTrader.Hyperopts.Loss
     {
         public double GetLoss(BacktestResults results)
         {
-            return results.Profit;
+            return results.ProfitPercentage;
         }
     }
 }

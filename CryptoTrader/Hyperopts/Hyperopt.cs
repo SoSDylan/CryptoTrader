@@ -43,7 +43,7 @@ namespace CryptoTrader.Hyperopts
                 // Run backtesting
                 var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
                 // Print test results
-                backtestResult.PrintResults();
+                backtestResult.PrintBasicResults();
                 
                 // Get loss from backtest results
                 var lossResult = _hyperoptLoss.GetLoss(backtestResult);
@@ -70,9 +70,7 @@ namespace CryptoTrader.Hyperopts
         private void PrintHyperoptResults()
         {
             Console.WriteLine();
-            Console.WriteLine("--------- Hyperopt Results ----------");
-            Console.Write("Profit: ");
-            Console.WriteLine(_bestBacktestResult.Profit);
+            _bestBacktestResult.PrintResults();
             
             Console.WriteLine();
             Console.WriteLine("------------ Best Values ------------");

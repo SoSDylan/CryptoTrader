@@ -35,9 +35,12 @@ namespace CryptoTrader.Backtesting
                 DoBuyAndSell(buy, sell, currentCandles);
             }
             
-            var profit = _trades.Sum(trade => trade.Profit);
+            var profitPercentage = _trades.Sum(trade => trade.ProfitPercentage);
+            var totalTradesCount = _trades.Count;
+            var successfulTradesCount = _trades.Count(trade => trade.Successful);
+            var failedTradesCount = _trades.Count(trade => !trade.Successful);
             
-            return new BacktestResults(profit);
+            return new BacktestResults(profitPercentage, totalTradesCount, successfulTradesCount, failedTradesCount);
         }
 
         private void DoBuyAndSell(double? buy, double? sell, Candles candles)
@@ -98,13 +101,16 @@ namespace CryptoTrader.Backtesting
         
         public bool IsFinalized => TradeState is TradeState.Finalized or TradeState.BuyRejected or TradeState.SellRejected;
 
-        public double Profit
+        public bool Successful => TradeState is TradeState.Finalized;
+
+        public double ProfitPercentage
         {
             get
             {
                 if (TradeState == TradeState.Finalized)
                 {
-                    return SellAtPrice - BuyAtPrice ?? 0;
+                    var multiplier = (SellAtPrice - BuyAtPrice) / BuyAtPrice ?? 0;
+                    return multiplier * 100;
                 }
 
                 return 0;
