@@ -6,12 +6,36 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace CryptoTrader.Core
 {
     public static class DownloadManager
     {
         public static async Task<Candles> DownloadAndParseCandles(string symbol, int interval, DateTime startTime, DateTime endTime)
+        {
+            Candles result = null!;
+            
+            await AnsiConsole.Progress()
+                .Columns(
+                    new TaskDescriptionColumn(),    // Task description
+                    new SpinnerColumn()             // Spinner
+                )
+                .StartAsync(async ctx =>
+                {
+                    // Define tasks
+                    var task = ctx.AddTask("[green]Downloading candles[/]");
+                    task.MaxValue = 1;
+
+                    result = await InternalDownloadAndParseCandles(symbol, interval, startTime, endTime);
+                    
+                    task.Increment(100);
+                });
+
+            return result;
+        }
+        
+        private static async Task<Candles> InternalDownloadAndParseCandles(string symbol, int interval, DateTime startTime, DateTime endTime)
         {
             string intervalString = interval switch
             {

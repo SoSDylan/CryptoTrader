@@ -5,6 +5,7 @@ using CryptoTrader.Backtesting;
 using CryptoTrader.Core;
 using CryptoTrader.Hyperopts.Loss;
 using CryptoTrader.Strategy;
+using Spectre.Console;
 
 namespace CryptoTrader.Hyperopts
 {
@@ -38,31 +39,48 @@ namespace CryptoTrader.Hyperopts
 
         public void Optimize()
         {
-            for (var epoch = 0; epoch < _epochs; epoch++)
-            {
-                // Run backtesting
-                var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
-                // Print test results
-                backtestResult.PrintBasicResults();
-                
-                // Get loss from backtest results
-                var lossResult = _hyperoptLoss.GetLoss(backtestResult);
-                
-                // check if this is the best loss result
-                if (lossResult > _bestLossResult)
+            // Synchronous
+            AnsiConsole.Progress()
+                .Columns(
+                    new TaskDescriptionColumn(),    // Task description
+                    new ProgressBarColumn(),        // Progress bar
+                    new PercentageColumn(),         // Percentage
+                    new RemainingTimeColumn()       // Remaining time
+                )
+                .Start(ctx => 
                 {
-                    _bestLossResult = lossResult;
-                    _bestBacktestResult = backtestResult;
-                    _bestOptimizableValues = new Dictionary<string, dynamic>();
-                    foreach (var optimizable in _hyperoptContext.Optimizables)
+                    // Define tasks
+                    var task = ctx.AddTask("[green]Hyperopt[/]");
+                    task.MaxValue = _epochs;
+
+                    for (var epoch = 0; epoch < _epochs; epoch++)
                     {
-                        _bestOptimizableValues.Add(optimizable.GetName(), optimizable.GetValue());
+                        // Run backtesting
+                        var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
+                        
+                        // Get loss from backtest results
+                        var lossResult = _hyperoptLoss.GetLoss(backtestResult);
+                        
+                        // check if this is the best loss result
+                        if (lossResult > _bestLossResult)
+                        {
+                            _bestLossResult = lossResult;
+                            _bestBacktestResult = backtestResult;
+                            _bestOptimizableValues = new Dictionary<string, dynamic>();
+                            foreach (var optimizable in _hyperoptContext.Optimizables)
+                            {
+                                _bestOptimizableValues.Add(optimizable.GetName(), optimizable.GetValue());
+                            }
+                        }
+                        
+                        // Optimize values
+                        OptimizeValues(epoch, _epochs);
+
+                        task.Value = epoch;
                     }
-                }
-                
-                // Optimize values
-                OptimizeValues(epoch, _epochs);
-            }
+
+                    task.Value = _epochs;
+                });
 
             PrintHyperoptResults();
         }
@@ -71,6 +89,30 @@ namespace CryptoTrader.Hyperopts
         {
             Console.WriteLine();
             _bestBacktestResult.PrintResults();
+            Console.WriteLine();
+            Console.WriteLine();
+            
+            // Create table
+            var table = new Table();
+
+            table.Title("[[ [yellow bold]Best Values[/] ]]");
+            table.SimpleHeavyBorder();
+            table.BorderColor(Color.Yellow);
+
+            // Add columns
+            table.AddColumn(new TableColumn("[red bold]Variable Name[/]").LeftAligned());
+            table.AddColumn(new TableColumn("[green bold]Value[/]").RightAligned());
+
+            foreach (var (name, value) in _bestOptimizableValues)
+            {
+                // Add row
+                table.AddRow($"[blue bold]{name}[/]", $"[blue]{value.ToString() as string}[/]");
+            }
+
+            // Render the table to the console
+            AnsiConsole.Write(table);
+
+            return;
             
             Console.WriteLine();
             Console.WriteLine("------------ Best Values ------------");
