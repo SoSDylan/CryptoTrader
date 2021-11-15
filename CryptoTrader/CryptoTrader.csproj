@@ -8,4 +8,8 @@
         <NeutralLanguage>en-AU</NeutralLanguage>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Spectre.Console" Version="0.42.0" />
+    </ItemGroup>
+
 </Project>

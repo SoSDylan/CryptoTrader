@@ -16,7 +16,7 @@ namespace CryptoTrader
             
             var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT",
                                                                         1440,
-                                                                        DateTime.Now.AddDays(-100),
+                                                                        DateTime.Now.AddDays(-1000),
                                                                         DateTime.Now.AddDays(0));
             
             // var candlesList = new List<Candle>
