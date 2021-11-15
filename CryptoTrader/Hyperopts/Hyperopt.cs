@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CryptoTrader.Backtest;
+using CryptoTrader.Backtesting;
 using CryptoTrader.Core;
-using CryptoTrader.Hyperopt.Loss;
+using CryptoTrader.Hyperopts.Loss;
 using CryptoTrader.Strategy;
 
-namespace CryptoTrader.Hyperopt
+namespace CryptoTrader.Hyperopts
 {
     public class Hyperopt
     {
@@ -41,8 +41,7 @@ namespace CryptoTrader.Hyperopt
             for (var epoch = 0; epoch < _epochs; epoch++)
             {
                 // Run backtesting
-                var backtestResult =
-                    new Backtest.Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
+                var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
                 // Print test results
                 backtestResult.PrintResults();
                 

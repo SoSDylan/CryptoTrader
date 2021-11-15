@@ -1,5 +1,5 @@
 using CryptoTrader.Core;
-using CryptoTrader.Hyperopt;
+using CryptoTrader.Hyperopts;
 
 namespace CryptoTrader.Strategy
 {

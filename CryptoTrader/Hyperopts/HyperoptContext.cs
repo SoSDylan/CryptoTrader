@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using CryptoTrader.Backtest;
 using CryptoTrader.Utils;
 
-namespace CryptoTrader.Hyperopt
+namespace CryptoTrader.Hyperopts
 {
     public class HyperoptContext
     {

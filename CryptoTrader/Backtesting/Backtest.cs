@@ -4,7 +4,7 @@ using System.Linq;
 using CryptoTrader.Core;
 using CryptoTrader.Strategy;
 
-namespace CryptoTrader.Backtest
+namespace CryptoTrader.Backtesting
 {
     public class Backtest
     {

@@ -1,6 +1,6 @@
-using CryptoTrader.Backtest;
+using CryptoTrader.Backtesting;
 
-namespace CryptoTrader.Hyperopt.Loss
+namespace CryptoTrader.Hyperopts.Loss
 {
     public class OnlyProfitHyperoptLoss : IHyperoptLoss
     {

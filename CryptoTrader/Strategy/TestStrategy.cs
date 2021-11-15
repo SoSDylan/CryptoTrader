@@ -1,6 +1,6 @@
 using System;
 using CryptoTrader.Core;
-using CryptoTrader.Hyperopt;
+using CryptoTrader.Hyperopts;
 using CryptoTrader.Indicators;
 
 namespace CryptoTrader.Strategy

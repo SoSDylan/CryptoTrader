@@ -1,7 +1,6 @@
 using System;
-using CryptoTrader.Hyperopt.Loss;
 
-namespace CryptoTrader.Backtest
+namespace CryptoTrader.Backtesting
 {
     public class BacktestResults
     {

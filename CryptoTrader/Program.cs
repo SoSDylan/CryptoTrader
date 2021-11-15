@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CryptoTrader.Core;
-using CryptoTrader.Hyperopt.Loss;
+using CryptoTrader.Hyperopts;
+using CryptoTrader.Hyperopts.Loss;
 using CryptoTrader.Strategy;
 
 namespace CryptoTrader
@@ -25,7 +25,7 @@ namespace CryptoTrader
             // };
             // var candles = new Candles(candlesList, 5, 100);
             
-            var hyperopt = new Hyperopt.Hyperopt(new TestStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
+            var hyperopt = new Hyperopt(new TestStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
             
             hyperopt.Optimize();
         }
