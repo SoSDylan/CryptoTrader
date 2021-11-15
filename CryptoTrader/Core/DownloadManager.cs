@@ -15,9 +15,9 @@ namespace CryptoTrader.Core
         {
             string intervalString = interval switch
             {
-                < 60 => $"{interval}m",
-                < 1440 => $"{interval}h",
-                _ => $"{interval}d"
+                < 60 => $"{interval:D}m",
+                < 1440 => $"{interval/60:D}h",
+                _ => $"{interval/1440:D}d"
             };
             
             var candleList = new List<Candle>();
