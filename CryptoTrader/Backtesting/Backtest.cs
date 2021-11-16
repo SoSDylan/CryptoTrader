@@ -9,6 +9,7 @@ namespace CryptoTrader.Backtesting
 {
     internal class Backtest
     {
+        private readonly int _epoch;
         private readonly BaseStrategy _strategy;
         private readonly Candles _candles;
         private readonly int? _buyTimeout;
@@ -18,8 +19,9 @@ namespace CryptoTrader.Backtesting
 
         private Trade? CurrentTrade => _trades.LastOrDefault();
 
-        internal Backtest(BaseStrategy strategy, Candles candles, int? buyTimeout = null, int? sellTimeout = null)
+        internal Backtest(int epoch, BaseStrategy strategy, Candles candles, int? buyTimeout = null, int? sellTimeout = null)
         {
+            _epoch = epoch;
             _strategy = strategy.DeepCopy();
             _candles = candles;
             
@@ -39,7 +41,7 @@ namespace CryptoTrader.Backtesting
 
             var finalizedTrades = _trades.Where(trade => trade.IsFinalized).ToList();
             
-            return new BacktestResults(finalizedTrades);
+            return new BacktestResults(_epoch, finalizedTrades);
         }
 
         private void DoBuyAndSell(double? buy, double? sell, Candles candles)

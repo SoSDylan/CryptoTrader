@@ -5,6 +5,7 @@ using CryptoTrader.Backtesting;
 using CryptoTrader.Core;
 using CryptoTrader.Hyperopts.Loss;
 using CryptoTrader.Strategy;
+using CryptoTrader.Utils;
 using Spectre.Console;
 
 namespace CryptoTrader.Hyperopts
@@ -40,13 +41,13 @@ namespace CryptoTrader.Hyperopts
         internal void Optimize()
         {
             var table = new Table().Centered();
-            
-            table.Title("[[ [yellow bold]Hyperopts[/] ]]");
+
+            table.Title("Hyperopts".AsTableTitle());
             table.SimpleHeavyBorder();
             table.BorderColor(Color.Yellow);
 
             // Add columns
-            table.AddColumn(new TableColumn("\n[yellow bold]Trade[/]").Footer("[yellow bold]Trade[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[yellow bold]Backtest[/]").Footer("[yellow bold]Backtest[/]").RightAligned());
             table.AddColumn(new TableColumn("\n[red bold]Profit[/]").Footer("[red bold]Profit[/]").RightAligned());
             table.AddColumn(new TableColumn("\n[green]Total[/]").Footer("[green]Total[/]").RightAligned());
             table.AddColumn(new TableColumn("[green bold]Trades[/]  \n[green]Successful[/]").Footer("[green]Successful[/]\n[green bold]Trades[/]  ").RightAligned());
@@ -64,10 +65,10 @@ namespace CryptoTrader.Hyperopts
                     for (var epoch = 0; epoch < _epochs; epoch++)
                     {
                         // Run backtesting
-                        var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
+                        var backtestResult = new Backtest(epoch, _strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
 
                         // Add a row to the table
-                        table.AddRow($"[white]#{epoch + 1}[/]",
+                        table.AddRow($"[grey]#{epoch + 1}[/]",
                                      $"[blue]{backtestResult.ProfitPercentage:0.00} %[/]",
                                      $"[blue]{backtestResult.TotalTradesCount}[/]",
                                      $"[blue]{backtestResult.SuccessfulTradesCount}[/]",
@@ -117,7 +118,7 @@ namespace CryptoTrader.Hyperopts
             // Create table
             var table = new Table().Centered();
 
-            table.Title("[[ [yellow bold]Best Values[/] ]]");
+            table.Title("Best Values".AsTableTitle());
             table.SimpleHeavyBorder();
             table.BorderColor(Color.Yellow);
 
