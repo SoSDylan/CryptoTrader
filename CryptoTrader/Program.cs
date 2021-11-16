@@ -1,49 +1,31 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using CryptoTrader.Commands;
 using CryptoTrader.Core;
 using CryptoTrader.Hyperopts;
 using CryptoTrader.Hyperopts.Loss;
 using CryptoTrader.Strategy;
 using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace CryptoTrader
 {
     internal static class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
-            PrintTitle();
+            var app = new CommandApp();
             
-            var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT",
-                                                                        720,
-                                                                        DateTime.Now.AddDays(-1200),
-                                                                        DateTime.Now.AddDays(0));
+            app.Configure(config =>
+            {
+                config.AddCommand<HyperoptCommand>("hyperopt");
+            });
             
-            // var candlesList = new List<Candle>
-            // {
-            //     new Candle(10, 0, 7, 6),
-            //     new Candle(11, 2, 9, 4),
-            //     new Candle(11, 1, 6, 8),
-            //     new Candle(12, 2, 8, 9),
-            // };
-            // var candles = new Candles(candlesList, 5, 100);
-            
-            var hyperopt = new Hyperopt(new MoonPhaseStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
-            
-            hyperopt.Optimize();
-        }
-
-        private static void PrintTitle()
-        {
-            var cryptoText = new FigletText("Crypto  ")
-                .Centered()
-                .Color(Color.LightSlateBlue);
-            var traderText = new FigletText("  Trader")
-                .Centered()
-                .Color(Color.LightSlateBlue);
-            
-            AnsiConsole.Write(cryptoText);
-            AnsiConsole.Write(traderText);
+            return await app.RunAsync(args);
         }
     }
 }
