@@ -39,24 +39,43 @@ namespace CryptoTrader.Hyperopts
 
         public void Optimize()
         {
-            // Synchronous
-            AnsiConsole.Progress()
-                .Columns(
-                    new TaskDescriptionColumn(),    // Task description
-                    new ProgressBarColumn(),        // Progress bar
-                    new PercentageColumn(),         // Percentage
-                    new RemainingTimeColumn()       // Remaining time
-                )
-                .Start(ctx => 
-                {
-                    // Define tasks
-                    var task = ctx.AddTask("[green]Hyperopt[/]");
-                    task.MaxValue = _epochs;
+            var table = new Table().Centered();
+            
+            table.Title("[[ [yellow bold]Hyperopts[/] ]]");
+            table.SimpleHeavyBorder();
+            table.BorderColor(Color.Yellow);
 
+            // Add columns
+            table.AddColumn(new TableColumn("\n[yellow bold]Trade[/]").Footer("[yellow bold]Trade[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[red bold]Profit[/]").Footer("[red bold]Profit[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[green]Total[/]").Footer("[green]Total[/]").RightAligned());
+            table.AddColumn(new TableColumn("[green bold]Trades[/]  \n[green]Successful[/]").Footer("[green]Successful[/]\n[green bold]Trades[/]  ").RightAligned());
+            table.AddColumn(new TableColumn("\n[green]Failed[/]").Footer("[green]Failed[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[purple bold]Wins[/]").Footer("[purple bold]Wins[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[purple bold]Losses[/]").Footer("[purple bold]Losses[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[purple bold]W/L[/]").Footer("[purple bold]W/L[/]").RightAligned());
+            
+            AnsiConsole.Live(table)
+                .AutoClear(false)
+                .Overflow(VerticalOverflow.Ellipsis)
+                .Cropping(VerticalOverflowCropping.Top)
+                .Start(ctx =>
+                {
                     for (var epoch = 0; epoch < _epochs; epoch++)
                     {
                         // Run backtesting
                         var backtestResult = new Backtest(_strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
+
+                        // Add a row to the table
+                        table.AddRow($"[white]#{epoch + 1}[/]",
+                                     $"[blue]{backtestResult.ProfitPercentage:0.00} %[/]",
+                                     $"[blue]{backtestResult.TotalTradesCount}[/]",
+                                     $"[blue]{backtestResult.SuccessfulTradesCount}[/]",
+                                     $"[blue]{backtestResult.FailedTradesCount}[/]",
+                                     $"[blue]{backtestResult.WinTradesCount}[/]",
+                                     $"[blue]{backtestResult.LossTradesCount}[/]",
+                                     $"[blue]{backtestResult.WinLossRatio:0.00}[/]");
+                        ctx.Refresh();
                         
                         // Get loss from backtest results
                         var lossResult = _hyperoptLoss.GetLoss(backtestResult);
@@ -75,11 +94,7 @@ namespace CryptoTrader.Hyperopts
                         
                         // Optimize values
                         OptimizeValues(epoch, _epochs);
-
-                        task.Value = epoch;
                     }
-
-                    task.Value = _epochs;
                 });
 
             PrintHyperoptResults();
@@ -88,12 +103,19 @@ namespace CryptoTrader.Hyperopts
         private void PrintHyperoptResults()
         {
             Console.WriteLine();
+            Console.WriteLine();
+            AnsiConsole.Write(new FigletText("Best Hyperopt")
+                .Centered()
+                .Color(Color.LightSlateBlue));
+            
+            
+            Console.WriteLine();
             _bestBacktestResult.PrintResults();
             Console.WriteLine();
             Console.WriteLine();
             
             // Create table
-            var table = new Table();
+            var table = new Table().Centered();
 
             table.Title("[[ [yellow bold]Best Values[/] ]]");
             table.SimpleHeavyBorder();
@@ -111,18 +133,6 @@ namespace CryptoTrader.Hyperopts
 
             // Render the table to the console
             AnsiConsole.Write(table);
-
-            return;
-            
-            Console.WriteLine();
-            Console.WriteLine("------------ Best Values ------------");
-            
-            foreach (var (name, value) in _bestOptimizableValues)
-            {
-                Console.Write(name);
-                Console.Write(": ");
-                Console.WriteLine(value);
-            }
         }
 
         private void RandomizeValues()

@@ -15,8 +15,8 @@ namespace CryptoTrader
             PrintTitle();
             
             var candles = await DownloadManager.DownloadAndParseCandles("BTCUSDT",
-                                                                        1440,
-                                                                        DateTime.Now.AddDays(-1000),
+                                                                        720,
+                                                                        DateTime.Now.AddDays(-1200),
                                                                         DateTime.Now.AddDays(0));
             
             // var candlesList = new List<Candle>
@@ -28,19 +28,19 @@ namespace CryptoTrader
             // };
             // var candles = new Candles(candlesList, 5, 100);
             
-            var hyperopt = new Hyperopt(new MoonPhaseStrategy(), new OnlyProfitHyperoptLoss(), candles, 1000);
+            var hyperopt = new Hyperopt(new MoonPhaseStrategy(), new OnlyProfitHyperoptLoss(), candles, 100);
             
             hyperopt.Optimize();
         }
 
         private static void PrintTitle()
         {
-            var cryptoText = new FigletText("Crypto")
-                .LeftAligned()
-                .Color(new Color(38, 176, 215));
-            var traderText = new FigletText("    Trader")
-                .LeftAligned()
-                .Color(new Color(38, 176, 215));
+            var cryptoText = new FigletText("Crypto  ")
+                .Centered()
+                .Color(Color.LightSlateBlue);
+            var traderText = new FigletText("  Trader")
+                .Centered()
+                .Color(Color.LightSlateBlue);
             
             AnsiConsole.Write(cryptoText);
             AnsiConsole.Write(traderText);

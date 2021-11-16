@@ -19,6 +19,22 @@ namespace CryptoTrader.Backtesting
         public readonly int WinTradesCount;
         public readonly int LossTradesCount;
 
+        public double WinLossRatio
+        {
+            get
+            {
+                if (LossTradesCount == 0)
+                    return 1;
+                
+                double ratio = (double) WinTradesCount / (double) LossTradesCount;
+
+                if (double.IsNaN(ratio))
+                    return 1;
+                
+                return ratio;
+            }
+        }
+
         public BacktestResults(List<Trade> trades)
         {
             Trades = trades;
@@ -50,7 +66,7 @@ namespace CryptoTrader.Backtesting
         private void PrintTotals()
         {
             // Create table
-            var table = new Table();
+            var table = new Table().Centered();
 
             table.Title("[[ [yellow bold]Backtest Results[/] ]]");
             table.SimpleHeavyBorder();
@@ -63,6 +79,7 @@ namespace CryptoTrader.Backtesting
             table.AddColumn(new TableColumn("\n[green]Failed[/]").RightAligned());
             table.AddColumn(new TableColumn("\n[purple bold]Wins[/]").RightAligned());
             table.AddColumn(new TableColumn("\n[purple bold]Losses[/]").RightAligned());
+            table.AddColumn(new TableColumn("\n[purple bold]W/L[/]").RightAligned());
 
             // Add row
             table.AddRow($"[blue]{ProfitPercentage:0.00} %[/]",
@@ -70,7 +87,8 @@ namespace CryptoTrader.Backtesting
                          $"[blue]{SuccessfulTradesCount}[/]",
                          $"[blue]{FailedTradesCount}[/]",
                          $"[blue]{WinTradesCount}[/]",
-                         $"[blue]{LossTradesCount}[/]");
+                         $"[blue]{LossTradesCount}[/]",
+                         $"[blue]{WinLossRatio:0.00}[/]");
 
             // Render the table to the console
             AnsiConsole.Write(table);
@@ -79,7 +97,7 @@ namespace CryptoTrader.Backtesting
         private void PrintDetails()
         {
             // Create table
-            var table = new Table();
+            var table = new Table().Centered();
 
             table.Title("[[ [yellow bold]Trade Details[/] ]]");
             table.SimpleHeavyBorder();
