@@ -7,7 +7,7 @@ using CryptoTrader.Strategy;
 
 namespace CryptoTrader.Backtesting
 {
-    public class Backtest
+    internal class Backtest
     {
         private readonly BaseStrategy _strategy;
         private readonly Candles _candles;
@@ -18,7 +18,7 @@ namespace CryptoTrader.Backtesting
 
         private Trade? CurrentTrade => _trades.LastOrDefault();
 
-        public Backtest(BaseStrategy strategy, Candles candles, int? buyTimeout = null, int? sellTimeout = null)
+        internal Backtest(BaseStrategy strategy, Candles candles, int? buyTimeout = null, int? sellTimeout = null)
         {
             _strategy = strategy.DeepCopy();
             _candles = candles;
@@ -28,7 +28,7 @@ namespace CryptoTrader.Backtesting
         }
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: CryptoTrader.Core.Candle[]")]
-        public BacktestResults RunBacktest()
+        internal BacktestResults RunBacktest()
         {
             for (int i = 1; i <= _candles.List.Count; i++)
             {
@@ -89,7 +89,7 @@ namespace CryptoTrader.Backtesting
         }
     }
 
-    public class Trade
+    internal class Trade
     {
         public TradeState TradeState = TradeState.Waiting;
         
@@ -153,7 +153,7 @@ namespace CryptoTrader.Backtesting
         }
     }
 
-    public enum TradeState
+    internal enum TradeState
     {
         Waiting,
         BuyPending,

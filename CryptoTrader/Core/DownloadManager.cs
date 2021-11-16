@@ -10,9 +10,9 @@ using Spectre.Console;
 
 namespace CryptoTrader.Core
 {
-    public static class DownloadManager
+    internal static class DownloadManager
     {
-        public static async Task<Candles> DownloadAndParseCandles(string symbol, int interval, DateTime startTime, DateTime endTime)
+        internal static async Task<Candles> DownloadAndParseCandles(string symbol, int interval, DateTime startTime, DateTime endTime)
         {
             Candles result = null!;
             

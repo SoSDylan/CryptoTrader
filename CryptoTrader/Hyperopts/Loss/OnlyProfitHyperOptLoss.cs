@@ -2,7 +2,7 @@ using CryptoTrader.Backtesting;
 
 namespace CryptoTrader.Hyperopts.Loss
 {
-    public class OnlyProfitHyperoptLoss : IHyperoptLoss
+    internal class OnlyProfitHyperoptLoss : IHyperoptLoss
     {
         public double GetLoss(BacktestResults results)
         {

@@ -7,7 +7,7 @@ namespace CryptoTrader.Hyperopts
     public class HyperoptContext
     {
         private List<IOptimizable> _optimizables = new();
-        public IList<IOptimizable> Optimizables => _optimizables.AsReadOnly();
+        internal IList<IOptimizable> Optimizables => _optimizables.AsReadOnly();
 
         public HyperoptContext Optimize<T>(string name, Func<T> get, Action<T> set, T min, T max)
             where T : struct, IComparable, IComparable<T>, IConvertible, IEquatable<T>, IFormattable
@@ -17,7 +17,7 @@ namespace CryptoTrader.Hyperopts
             return this;
         }
 
-        public interface IOptimizable
+        internal interface IOptimizable
         {
             public string GetName();
             public dynamic GetValue();
@@ -39,7 +39,7 @@ namespace CryptoTrader.Hyperopts
             private string _name { get; set; }
             private T _value { get; set; }
             
-            public Optimizable(string name, Func<T> get, Action<T> set, T min, T max)
+            internal Optimizable(string name, Func<T> get, Action<T> set, T min, T max)
             {
                 _get = get;
                 _set = set;

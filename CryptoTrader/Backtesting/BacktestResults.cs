@@ -8,18 +8,18 @@ namespace CryptoTrader.Backtesting
 {
     public class BacktestResults
     {
-        public readonly List<Trade> Trades;
+        internal readonly List<Trade> Trades;
         
-        public readonly double ProfitPercentage;
+        internal readonly double ProfitPercentage;
         
-        public readonly int TotalTradesCount;
-        public readonly int SuccessfulTradesCount;
-        public readonly int FailedTradesCount;
+        internal readonly int TotalTradesCount;
+        internal readonly int SuccessfulTradesCount;
+        internal readonly int FailedTradesCount;
         
-        public readonly int WinTradesCount;
-        public readonly int LossTradesCount;
+        internal readonly int WinTradesCount;
+        internal readonly int LossTradesCount;
 
-        public double WinLossRatio
+        internal double WinLossRatio
         {
             get
             {
@@ -35,7 +35,7 @@ namespace CryptoTrader.Backtesting
             }
         }
 
-        public BacktestResults(List<Trade> trades)
+        internal BacktestResults(List<Trade> trades)
         {
             Trades = trades;
             
@@ -49,13 +49,13 @@ namespace CryptoTrader.Backtesting
             LossTradesCount = trades.Count(trade => trade.ProfitPercentage <= 0);
         }
 
-        public void PrintBasicResults()
+        internal void PrintBasicResults()
         {
             Console.Write("Profit (%): ");
             Console.WriteLine(ProfitPercentage);
         }
 
-        public void PrintResults()
+        internal void PrintResults()
         {
             PrintTotals();
             Console.WriteLine();

@@ -9,7 +9,7 @@ using Spectre.Console;
 
 namespace CryptoTrader.Hyperopts
 {
-    public class Hyperopt
+    internal class Hyperopt
     {
         private readonly BaseStrategy _strategy;
         private readonly Candles _candles;
@@ -24,7 +24,7 @@ namespace CryptoTrader.Hyperopts
         private Dictionary<string, dynamic> _bestOptimizableValues = new();
         private BacktestResults _bestBacktestResult;
 
-        public Hyperopt(BaseStrategy strategy, IHyperoptLoss hyperoptLoss, Candles candles, int epochs,
+        internal Hyperopt(BaseStrategy strategy, IHyperoptLoss hyperoptLoss, Candles candles, int epochs,
             int? buyTimeout = null, int? sellTimeout = null)
         {
             _strategy = strategy;
@@ -37,7 +37,7 @@ namespace CryptoTrader.Hyperopts
             _hyperoptContext = _strategy.HyperoptContext();
         }
 
-        public void Optimize()
+        internal void Optimize()
         {
             var table = new Table().Centered();
             
