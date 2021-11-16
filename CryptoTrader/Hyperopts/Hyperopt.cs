@@ -57,7 +57,7 @@ namespace CryptoTrader.Hyperopts
             
             AnsiConsole.Live(table)
                 .AutoClear(false)
-                .Overflow(VerticalOverflow.Ellipsis)
+                .Overflow(VerticalOverflow.Crop)
                 .Cropping(VerticalOverflowCropping.Top)
                 .Start(ctx =>
                 {
