@@ -6,16 +6,20 @@ namespace CryptoTrader
 {
     internal static class CryptoTrader
     {
+        internal static ICommandApp App;
+        
         public static async Task<int> Main(string[] args)
         {
-            var app = new CommandApp();
+            App = new CommandApp();
             
-            app.Configure(config =>
+            App.Configure(config =>
             {
+                config.AddCommand<GuiCommand>("gui");
+                
                 config.AddCommand<HyperoptCommand>("hyperopt");
             });
             
-            return await app.RunAsync(args);
+            return await App.RunAsync(args);
         }
     }
 }
