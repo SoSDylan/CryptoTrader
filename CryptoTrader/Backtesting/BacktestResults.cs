@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using CryptoTrader.Utils;
 using Spectre.Console;
@@ -8,19 +9,20 @@ namespace CryptoTrader.Backtesting
 {
     public class BacktestResults
     {
-        private readonly int Epoch;
-        internal readonly List<Trade> Trades;
+        private readonly int _epoch;
         
-        internal readonly double ProfitPercentage;
+        public readonly ReadOnlyCollection<Trade> Trades;
         
-        internal readonly int TotalTradesCount;
-        internal readonly int SuccessfulTradesCount;
-        internal readonly int FailedTradesCount;
+        public readonly double ProfitPercentage;
         
-        internal readonly int WinTradesCount;
-        internal readonly int LossTradesCount;
+        public readonly int TotalTradesCount;
+        public readonly int SuccessfulTradesCount;
+        public readonly int FailedTradesCount;
+        
+        public readonly int WinTradesCount;
+        public readonly int LossTradesCount;
 
-        internal double WinLossRatio
+        public double WinLossRatio
         {
             get
             {
@@ -38,8 +40,8 @@ namespace CryptoTrader.Backtesting
 
         internal BacktestResults(int epoch, List<Trade> trades)
         {
-            Epoch = epoch;
-            Trades = trades;
+            _epoch = epoch;
+            Trades = trades.AsReadOnly();
             
             ProfitPercentage = trades.Sum(trade => trade.ProfitPercentage);
             
@@ -85,7 +87,7 @@ namespace CryptoTrader.Backtesting
             table.AddColumn(new TableColumn("\n[purple bold]W/L[/]").RightAligned());
 
             // Add row
-            table.AddRow($"[grey]#{Epoch}[/]",
+            table.AddRow($"[grey]#{_epoch}[/]",
                          $"[blue]{ProfitPercentage:0.00} %[/]",
                          $"[blue]{TotalTradesCount}[/]",
                          $"[blue]{SuccessfulTradesCount}[/]",

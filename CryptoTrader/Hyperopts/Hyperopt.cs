@@ -62,13 +62,13 @@ namespace CryptoTrader.Hyperopts
                 .Cropping(VerticalOverflowCropping.Top)
                 .Start(ctx =>
                 {
-                    for (var epoch = 0; epoch < _epochs; epoch++)
+                    for (var epoch = 1; epoch <= _epochs; epoch++)
                     {
                         // Run backtesting
                         var backtestResult = new Backtest(epoch, _strategy, _candles, _buyTimeout, _sellTimeout).RunBacktest();
 
                         // Add a row to the table
-                        table.AddRow($"[grey]#{epoch + 1}[/]",
+                        table.AddRow($"[grey]#{epoch}[/]",
                                      $"[blue]{backtestResult.ProfitPercentage:0.00} %[/]",
                                      $"[blue]{backtestResult.TotalTradesCount}[/]",
                                      $"[blue]{backtestResult.SuccessfulTradesCount}[/]",

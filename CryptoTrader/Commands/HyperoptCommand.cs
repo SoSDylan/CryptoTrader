@@ -29,7 +29,7 @@ namespace CryptoTrader.Commands
         [DefaultValue(100)]
         public int Epochs { get; set; }
         
-        [Description("Interval for the candles in seconds")]
+        [Description("Interval for the candles in minutes")]
         [CommandOption("-i|--interval")]
         [DefaultValue(720)]
         public int Interval { get; set; }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -60,7 +61,7 @@ namespace CryptoTrader.Utils
                 _assemblies = new List<Assembly>();
                 _assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
                 
-                string addonsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                string addonsPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName) +
                               Path.DirectorySeparatorChar + "Addons";
 
                 try
@@ -72,8 +73,19 @@ namespace CryptoTrader.Utils
                 }
                 catch (IOException)
                 {
-                    AnsiConsole.MarkupLine("[yellow bold]Addons directory not found, creating directory[/]");
-                    Directory.CreateDirectory(addonsPath);
+                    AnsiConsole.MarkupLine("[yellow bold]Addons directory not found, trying to create directory at[/]");
+                    AnsiConsole.MarkupLine($"[yellow bold]\"{addonsPath}\"[/]");
+                    
+                    try
+                    {
+                        Directory.CreateDirectory(addonsPath);
+                        AnsiConsole.MarkupLine("[green bold]Created addons directory[/]");
+                    }
+                    catch
+                    {
+                        AnsiConsole.MarkupLine("[yellow bold]Could not create addons directory[/]");
+                    }
+
                     return _assemblies;
                 }
             }

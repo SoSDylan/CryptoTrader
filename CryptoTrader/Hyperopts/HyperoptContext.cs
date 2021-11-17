@@ -82,8 +82,8 @@ namespace CryptoTrader.Hyperopts
                 dynamic min = _min!;
                 dynamic max = _max!;
 
-                // Start bringing in random min and random max once we are 25% of the way through the epochs
-                var percentage = Math.Min(maxEpochs, (maxEpochs - epoch) * 1.25);
+                // Start bringing in random min and random max once we are 50% of the way through the epochs
+                var percentage = Math.Min(maxEpochs, (maxEpochs - epoch) * 1.5);
                 
                 dynamic randomMin = MathUtils.Map(percentage, maxEpochs, 0, min, bestValue);
                 dynamic randomMax = MathUtils.Map(percentage, maxEpochs, 0, max, bestValue);

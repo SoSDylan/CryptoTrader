@@ -91,7 +91,7 @@ namespace CryptoTrader.Backtesting
         }
     }
 
-    internal class Trade
+    public class Trade
     {
         public TradeState TradeState = TradeState.Waiting;
         
@@ -155,7 +155,7 @@ namespace CryptoTrader.Backtesting
         }
     }
 
-    internal enum TradeState
+    public enum TradeState
     {
         Waiting,
         BuyPending,
