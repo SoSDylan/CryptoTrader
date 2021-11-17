@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using CryptoTrader.Core;
 using CryptoTrader.Strategy;
+using CryptoTrader.Utils;
 
 namespace CryptoTrader.Backtesting
 {
@@ -29,12 +30,12 @@ namespace CryptoTrader.Backtesting
             _sellTimeout = sellTimeout;
         }
 
-        [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: CryptoTrader.Core.Candle[]")]
         internal BacktestResults RunBacktest()
         {
-            for (int i = 1; i <= _candles.List.Count; i++)
+            for (int i = 1; i <= _candles.List.Count(); i++)
             {
-                var currentCandles = new Candles(_candles.List.Take(i).ToList(), _candles.Interval, _candles.MaxCandles);
+                _candles.List.SetMaxSize(i);
+                var currentCandles = new Candles(_candles.List, _candles.Interval, _candles.MaxCandles);
                 var (buy, sell) = _strategy.Tick(currentCandles);
                 DoBuyAndSell(buy, sell, currentCandles);
             }

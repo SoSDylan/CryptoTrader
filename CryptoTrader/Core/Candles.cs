@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CryptoTrader.Utils;
 
 namespace CryptoTrader.Core
 {
@@ -9,12 +10,12 @@ namespace CryptoTrader.Core
         public readonly int Interval;
         public readonly int MaxCandles;
         
-        private List<Candle> _candles = new();
+        private AtomicList<Candle> _list = new();
         /// <summary>
         /// Start of list is oldest candle
         /// End of list is newest candle
         /// </summary>
-        public IList<Candle> List => _candles.AsReadOnly();
+        public AtomicList<Candle> List => _list;
         
         public Candles(int interval, int maxCandles)
         {
@@ -22,9 +23,9 @@ namespace CryptoTrader.Core
             MaxCandles = maxCandles;
         }
         
-        public Candles(List<Candle> candles, int interval, int maxCandles)
+        public Candles(AtomicList<Candle> list, int interval, int maxCandles)
         {
-            _candles = candles;
+            _list = list;
             Interval = interval;
             MaxCandles = maxCandles;
             
@@ -33,16 +34,16 @@ namespace CryptoTrader.Core
         
         public void AddCandle(Candle candle)    
         {
-            _candles.Add(candle);
+            _list.Add(candle);
             
             RemoveExcessCandles();
         }
 
         public void RemoveExcessCandles()
         {
-            if (_candles.Count > MaxCandles)
+            if (_list.Count > MaxCandles)
             {
-                _candles.RemoveRange(0, _candles.Count - MaxCandles);
+                _list.RemoveRange(0, _list.Count - MaxCandles);
             }
         }
         
@@ -50,18 +51,18 @@ namespace CryptoTrader.Core
         {
             get
             {
-                if (_candles.Count <= offset)
+                if (_list.Count <= offset)
                 {
                     return null;
                 }
             
-                return List[^(offset + 1)];
+                return _list[^(offset + 1)];
             }
         }
 
         public Candle GetCurrentCandle()
         {
-            return List.Last();
+            return _list[^1];
         }
     }
     
