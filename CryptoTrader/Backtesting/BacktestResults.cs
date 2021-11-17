@@ -118,7 +118,7 @@ namespace CryptoTrader.Backtesting
             foreach (var (trade, i) in Trades.WithIndex())
             {
                 // Add row
-                table.AddRow($"[grey]#{i}[/]",
+                table.AddRow($"[grey]#{i + 1}[/]",
                              $"[blue]{trade.ProfitPercentage:0.00} %[/]",
                              $"[blue]{trade.BuyAtPrice}[/]",
                              $"[blue]{trade.SellAtPrice}[/]");
