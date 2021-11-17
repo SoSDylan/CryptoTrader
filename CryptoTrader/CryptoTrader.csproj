@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DarkIce.Toolkit.Core" Version="1.0.2.4900" />
       <PackageReference Include="Spectre.Console" Version="0.42.0" />
     </ItemGroup>
 
