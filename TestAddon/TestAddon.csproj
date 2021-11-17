@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="CryptoTrader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\Desktop\CryptoTrader\CryptoTrader\bin\Release\net6.0\CryptoTrader.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

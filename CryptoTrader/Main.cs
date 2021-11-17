@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace CryptoTrader
 {
-    internal static class Program
+    internal static class CryptoTrader
     {
         public static async Task<int> Main(string[] args)
         {

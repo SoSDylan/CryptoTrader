@@ -20,23 +20,23 @@ namespace CryptoTrader.Commands
         public string HyperoptLoss { get; set; }
         
         [Description("The cryptocurrency symbol to use")]
-        [CommandOption("-s|--symbol")]
         [DefaultValue("BTCUSDT")]
+        [CommandOption("-s|--symbol")]
         public string Symbol { get; set; }
         
         [Description("Number of epochs to run")]
-        [CommandOption("-e|--epochs")]
         [DefaultValue(100)]
+        [CommandOption("-e|--epochs")]
         public int Epochs { get; set; }
         
         [Description("Interval for the candles in minutes")]
-        [CommandOption("-i|--interval")]
         [DefaultValue(720)]
+        [CommandOption("-i|--interval")]
         public int Interval { get; set; }
         
         [Description("Number of days to get candles")]
-        [CommandOption("-d|--days")]
         [DefaultValue(100)]
+        [CommandOption("-d|--days")]
         public int Days { get; set; }
     }
     
