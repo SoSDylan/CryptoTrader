@@ -47,6 +47,15 @@ namespace CryptoTrader.Core
                         var binanceEndTime = candleList.LastOrDefault()?.OpenTime ?? endTime;
                         var binanceEndTimeUnix = (long) (binanceEndTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
                         var response = await client.GetAsync(uri + $"&endTime={binanceEndTimeUnix}");
+                        
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            var error = await response.Content.ReadFromJsonAsync<Dictionary<string, dynamic>>();
+
+                            string? message = error?.GetValueOrDefault("msg")?.ToString();
+                            
+                            throw new Exception($"Error while downloading candles: {message ?? response.StatusCode.ToString()}");
+                        }
 
                         var json = await response.Content.ReadFromJsonAsync<List<List<dynamic>>>();
                         json.Reverse();
