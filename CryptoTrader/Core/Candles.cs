@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CryptoTrader.Types;
 using CryptoTrader.Utils;
 
 namespace CryptoTrader.Core
@@ -10,12 +11,12 @@ namespace CryptoTrader.Core
         public readonly int Interval;
         public readonly int MaxCandles;
         
-        private AtomicList<Candle> _list = new();
+        private CandleList<Candle> _list = new();
         /// <summary>
         /// Start of list is oldest candle
         /// End of list is newest candle
         /// </summary>
-        public AtomicList<Candle> List => _list;
+        public CandleList<Candle> List => _list;
         
         public Candles(int interval, int maxCandles)
         {
@@ -23,7 +24,7 @@ namespace CryptoTrader.Core
             MaxCandles = maxCandles;
         }
         
-        public Candles(AtomicList<Candle> list, int interval, int maxCandles)
+        public Candles(CandleList<Candle> list, int interval, int maxCandles)
         {
             _list = list;
             Interval = interval;

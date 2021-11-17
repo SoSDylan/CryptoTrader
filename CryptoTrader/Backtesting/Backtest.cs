@@ -32,12 +32,11 @@ namespace CryptoTrader.Backtesting
 
         internal BacktestResults RunBacktest()
         {
-            for (int i = 1; i <= _candles.List.Count(); i++)
+            for (int i = 1; i <= _candles.List.RealCount; i++)
             {
                 _candles.List.SetMaxSize(i);
-                var currentCandles = new Candles(_candles.List, _candles.Interval, _candles.MaxCandles);
-                var (buy, sell) = _strategy.Tick(currentCandles);
-                DoBuyAndSell(buy, sell, currentCandles);
+                var (buy, sell) = _strategy.Tick(_candles);
+                DoBuyAndSell(buy, sell, _candles);
             }
 
             var finalizedTrades = _trades.Where(trade => trade.IsFinalized).ToList();

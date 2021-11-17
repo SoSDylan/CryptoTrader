@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using CryptoTrader.Types;
 using CryptoTrader.Utils;
 using Spectre.Console;
 
@@ -37,7 +38,7 @@ namespace CryptoTrader.Core
                         _ => $"{interval/1440:D}d"
                     };
                     
-                    var candleList = new AtomicList<Candle>();
+                    var candleList = new CandleList<Candle>();
                     
                     var uri = new Uri($"https://api.binance.com/api/v1/klines?symbol={symbol}&interval={intervalString}&limit=500");
 
