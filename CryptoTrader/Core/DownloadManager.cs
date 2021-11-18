@@ -39,8 +39,11 @@ namespace CryptoTrader.Core
                     };
                     
                     var candleList = new CandleList<Candle>();
+
+                    var days = (endTime - startTime).TotalDays;
+                    var limit = (int) Math.Max(400, Math.Min(1000, 125 * (days / interval)));
                     
-                    var uri = new Uri($"https://api.binance.com/api/v1/klines?symbol={symbol}&interval={intervalString}&limit=500");
+                    var uri = new Uri($"https://api.binance.com/api/v1/klines?symbol={symbol}&interval={intervalString}&limit={limit}");
 
                     while (candleList.Count == 0 || candleList.Last().OpenTime > startTime)
                     {
