@@ -137,13 +137,26 @@ namespace CryptoTrader.Backtesting
 
         public bool Successful => TradeState is TradeState.Finalized;
 
+        public double Profit
+        {
+            get
+            {
+                if (TradeState == TradeState.Finalized)
+                {
+                    return (SellAtPrice - BuyAtPrice) - (SellAtPriceFee + BuyAtPriceFee) ?? 0;
+                }
+
+                return 0;
+            }
+        }
+
         public double ProfitPercentage
         {
             get
             {
                 if (TradeState == TradeState.Finalized)
                 {
-                    var multiplier = ((SellAtPrice - BuyAtPrice) - (SellAtPriceFee + BuyAtPriceFee)) / SellAtPrice ?? 0;
+                    var multiplier = Profit / SellAtPrice ?? 0;
                     return multiplier * 100;
                 }
 

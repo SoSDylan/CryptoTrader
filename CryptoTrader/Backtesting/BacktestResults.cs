@@ -21,6 +21,8 @@ namespace CryptoTrader.Backtesting
         
         public readonly int WinTradesCount;
         public readonly int LossTradesCount;
+        
+        public double ProfitStandardDeviation => Trades.Select(x => x.Profit).StandardDeviation();
 
         public double WinLossRatio
         {

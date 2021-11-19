@@ -19,6 +19,8 @@ namespace CryptoTrader.Hyperopts
         private readonly int _epochs;
         private readonly int? _buyTimeout;
         private readonly int? _sellTimeout;
+        private readonly DateTime _startDate;
+        private readonly DateTime _endDate;
 
         // The higher the number, the better the algorithm
         private double _bestLossResult = double.MinValue;
@@ -34,6 +36,9 @@ namespace CryptoTrader.Hyperopts
             _epochs = epochs;
             _buyTimeout = buyTimeout;
             _sellTimeout = sellTimeout;
+
+            _startDate = candles.List.First().OpenTime;
+            _endDate = candles.List.Last().CloseTime;
 
             _hyperoptContext = _strategy.HyperoptContext();
         }
@@ -79,7 +84,7 @@ namespace CryptoTrader.Hyperopts
                         ctx.Refresh();
                         
                         // Get loss from backtest results
-                        var lossResult = _hyperoptLoss.GetLoss(backtestResult);
+                        var lossResult = _hyperoptLoss.GetLoss(backtestResult, _startDate, _endDate);
                         
                         // check if this is the best loss result
                         if (lossResult > _bestLossResult)
