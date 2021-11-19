@@ -11,6 +11,13 @@
     <ItemGroup>
       <PackageReference Include="DarkIce.Toolkit.Core" Version="1.0.2.4900" />
       <PackageReference Include="Spectre.Console" Version="0.42.0" />
+      <PackageReference Include="YamlDotNet" Version="11.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="config.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

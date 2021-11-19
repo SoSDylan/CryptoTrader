@@ -124,6 +124,12 @@ namespace CryptoTrader.Backtesting
         public double? SellAtPrice;
         public DateTime? SellAtTime;
         
+        private double? BuyAtPriceFee => BuyAtPrice.HasValue ? BuyAtPrice.Value * (1 - CryptoTrader.Config.Exchange.FeeMultiplier) : null;
+        private double? SellAtPriceFee => BuyAtPrice.HasValue ? BuyAtPrice.Value * (1 - CryptoTrader.Config.Exchange.FeeMultiplier) : null;
+        
+        private double? BuyAtPriceFeeTaken => BuyAtPrice.HasValue ? BuyAtPrice.Value - BuyAtPriceFee : null;
+        private double? SellAtPriceFeeTaken => SellAtPrice.HasValue ? SellAtPrice.Value - SellAtPriceFee : null;
+        
         public double? StopLoss;
         public double? ForceStopLoss;
         
@@ -137,7 +143,7 @@ namespace CryptoTrader.Backtesting
             {
                 if (TradeState == TradeState.Finalized)
                 {
-                    var multiplier = (SellAtPrice - BuyAtPrice) / BuyAtPrice ?? 0;
+                    var multiplier = ((SellAtPrice - BuyAtPrice) - (SellAtPriceFee + BuyAtPriceFee)) / SellAtPrice ?? 0;
                     return multiplier * 100;
                 }
 
