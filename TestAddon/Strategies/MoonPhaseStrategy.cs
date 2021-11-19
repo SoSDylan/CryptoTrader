@@ -9,15 +9,16 @@ namespace TestAddon.Strategies
     {
         private int _buy = 0;
         private int _sell = 0;
+        private double _stopLossMultiplier = 0.98; // 2%
     
-        public override HyperoptContext HyperoptContext()
+        protected override HyperoptContext HyperoptContext()
         {
             return new HyperoptContext()
                 .Optimize(nameof(_buy), () => _buy, val => _buy = val, 0, 30)
                 .Optimize(nameof(_sell), () => _sell, val => _sell = val, 0, 30);
         }
 
-        public override double? BuySignal(Candles candles)
+        protected override BuyRequest? BuySignal(Candles candles)
         {
             var moon = new MoonPhases(candles);
             var vmoon = moon[0];
@@ -25,12 +26,12 @@ namespace TestAddon.Strategies
             if (!vmoon.HasValue) return null;
 
             if (_buy >= vmoon.Value)
-                return candles.GetCurrentCandle().Close;
+                return new BuyRequest(candles.GetCurrentCandle().Close, candles.GetCurrentCandle().Close * _stopLossMultiplier);
 
             return null;
         }
 
-        public override double? SellSignal(Candles candles)
+        protected override SellRequest? SellSignal(Candles candles)
         {
             var moon = new MoonPhases(candles);
             var vmoon = moon[0];
@@ -38,7 +39,7 @@ namespace TestAddon.Strategies
             if (!vmoon.HasValue) return null;
 
             if (_sell <= vmoon.Value)
-                return candles.GetCurrentCandle().Close;
+                return new SellRequest(candles.GetCurrentCandle().Close);
 
             return null;
         }

@@ -6,9 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="CryptoTrader, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\Desktop\CryptoTrader\CryptoTrader\bin\Release\net6.0\CryptoTrader.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\CryptoTrader\CryptoTrader.csproj" />
     </ItemGroup>
 
 </Project>

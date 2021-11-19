@@ -5,19 +5,19 @@ namespace CryptoTrader.Strategy
 {
     public abstract class BaseStrategy
     {
-        public abstract HyperoptContext HyperoptContext();
+        protected internal abstract HyperoptContext HyperoptContext();
         
         /// <summary>Decide whether to initiate a buy trade</summary>
         /// <param name="candles">The previous candles</param>
-        /// <returns>A <c>double</c> value to buy or <c>null</c> to not buy</returns>
-        public abstract double? BuySignal(Candles candles);
-        
+        /// <returns>The price to buy or <c>null</c> to not buy</returns>
+        protected abstract BuyRequest? BuySignal(Candles candles);
+
         /// <summary>Decide whether to initiate a sell trade</summary>
         /// <param name="candles">The previous candles</param>
-        /// <returns>A <c>double</c> value to sell or <c>null</c> to not sell</returns>
-        public abstract double? SellSignal(Candles candles);
+        /// <returns>The price to sell or <c>null</c> to not sell</returns>
+        protected abstract SellRequest? SellSignal(Candles candles);
 
-        public (double? buy, double? sell) Tick(Candles candles)
+        internal (BuyRequest? buy, SellRequest? sell) Tick(Candles candles)
         {
             var buy = BuySignal(candles);
             var sell = SellSignal(candles);
@@ -25,9 +25,33 @@ namespace CryptoTrader.Strategy
             return (buy, sell);
         }
         
-        public BaseStrategy DeepCopy()
+        internal BaseStrategy DeepCopy()
         {
             return (BaseStrategy) this.MemberwiseClone();
+        }
+
+        protected internal struct BuyRequest
+        {
+            public double Price;
+            public double StopLoss;
+            public double? ForceStopLoss;
+            
+            public BuyRequest(double price, double stopLoss, double? forceStopLoss = null)
+            {
+                Price = price;
+                StopLoss = stopLoss;
+                ForceStopLoss = stopLoss;
+            }
+        }
+
+        protected internal struct SellRequest
+        {
+            public double Price;
+            
+            public SellRequest(double price)
+            {
+                Price = price;
+            }
         }
     }
 }

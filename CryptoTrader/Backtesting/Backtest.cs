@@ -44,7 +44,7 @@ namespace CryptoTrader.Backtesting
             return new BacktestResults(_epoch, finalizedTrades);
         }
 
-        private void DoBuyAndSell(double? buy, double? sell, Candles candles)
+        private void DoBuyAndSell(BaseStrategy.BuyRequest? buy, BaseStrategy.SellRequest? sell, Candles candles)
         {
             // Emulates buying and selling on an exchange
             // Checks if the price has changed to a price where the order can be fulfilled
@@ -58,14 +58,38 @@ namespace CryptoTrader.Backtesting
             
             switch (tradeState)
             {
-                case TradeState.Purchased when sell.HasValue:
-                    // Try Sell
-                    CurrentTrade.TrySell(sell.Value, candles.GetCurrentCandle().CloseTime);
+                case TradeState.Purchased:
+                    if (sell.HasValue)
+                    {
+                        // Try Sell
+                        var sellRequest = sell.Value;
+
+                        CurrentTrade.TrySell(sellRequest.Price, candles.GetCurrentCandle().CloseTime);
+                    }
+
+                    if (candles.GetCurrentCandle().Low < CurrentTrade.StopLoss)
+                    {
+                        // Try stop loss
+                        CurrentTrade.TrySell(CurrentTrade.StopLoss.Value, candles.GetCurrentCandle().CloseTime);
+                    }
+                    
+                    if (CurrentTrade.ForceStopLoss.HasValue && candles.GetCurrentCandle().Low < CurrentTrade.ForceStopLoss)
+                    {
+                        // Try force stop loss
+                        CurrentTrade.TrySell(CurrentTrade.ForceStopLoss.Value, candles.GetCurrentCandle().CloseTime);
+                        CurrentTrade.FinalizeSell();
+                    }
+                    
                     break;
                 
                 case TradeState.Waiting when buy.HasValue:
                     // Try Buy
-                    CurrentTrade.TryBuy(buy.Value, candles.GetCurrentCandle().CloseTime);
+                    var buyRequest = buy.Value;
+                    
+                    CurrentTrade.TryBuy(buyRequest.Price,
+                                        candles.GetCurrentCandle().CloseTime,
+                                        buyRequest.StopLoss,
+                                        buyRequest.ForceStopLoss);
                     break;
                 
                 case TradeState.BuyPending when candles.GetCurrentCandle().CloseTime > CurrentTrade.BuyAtTime:
@@ -100,6 +124,9 @@ namespace CryptoTrader.Backtesting
         public double? SellAtPrice;
         public DateTime? SellAtTime;
         
+        public double? StopLoss;
+        public double? ForceStopLoss;
+        
         public bool IsFinalized => TradeState is TradeState.Finalized or TradeState.BuyRejected or TradeState.SellRejected;
 
         public bool Successful => TradeState is TradeState.Finalized;
@@ -118,12 +145,15 @@ namespace CryptoTrader.Backtesting
             }
         }
 
-        public void TryBuy(double buyAtPrice, DateTime buyAtTime)
+        public void TryBuy(double buyAtPrice, DateTime buyAtTime, double stopLoss, double? forceStopLoss)
         {
             TradeState = TradeState.BuyPending;
             
             BuyAtPrice = buyAtPrice;
             BuyAtTime = buyAtTime;
+
+            StopLoss = stopLoss;
+            ForceStopLoss = forceStopLoss;
         }
 
         public void TrySell(double sellAtPrice, DateTime sellAtTime)
