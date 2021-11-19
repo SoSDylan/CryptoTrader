@@ -27,7 +27,7 @@ namespace CryptoTrader.Backtesting
             get
             {
                 if (LossTradesCount == 0)
-                    return 1;
+                    return double.PositiveInfinity;
                 
                 double ratio = (double) WinTradesCount / (double) LossTradesCount;
 
@@ -114,6 +114,7 @@ namespace CryptoTrader.Backtesting
             table.AddColumn(new TableColumn("[red bold]Profit[/]").RightAligned());
             table.AddColumn(new TableColumn("[green bold]Buy Price[/]").RightAligned());
             table.AddColumn(new TableColumn("[green bold]Sell Price[/]").RightAligned());
+            table.AddColumn(new TableColumn("[purple bold]Time[/]").LeftAligned());
 
             foreach (var (trade, i) in Trades.WithIndex())
             {
@@ -121,7 +122,8 @@ namespace CryptoTrader.Backtesting
                 table.AddRow($"[grey]#{i + 1}[/]",
                              $"[blue]{trade.ProfitPercentage:0.00} %[/]",
                              $"[blue]{trade.BuyAtPrice}[/]",
-                             $"[blue]{trade.SellAtPrice}[/]");
+                             $"[blue]{trade.SellAtPrice}[/]",
+                             $"[blue]{(trade.SellAtTime - trade.BuyAtTime).ToRelativeString()}[/]");
             }
 
             // Render the table to the console
