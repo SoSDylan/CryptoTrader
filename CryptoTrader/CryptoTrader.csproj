@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <NeutralLanguage>en-AU</NeutralLanguage>
+        <AssemblyName>cryptotrader</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
